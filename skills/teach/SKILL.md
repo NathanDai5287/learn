@@ -136,6 +136,68 @@ Repeat this full loop per node — don't front-load all the foundations once at 
 
 If you catch yourself asserting a fact he'd have to take on faith — foundational or not — stop: either motivate it and confirm it lands, or ground it in something already established. Unmotivated, unconfirmed facts don't lock in — that's the whole point.
 
+## Durable learning artifacts
+
+For every sustained lesson in a file-backed learning project, maintain two curated Obsidian notes in addition to a full session log. Ask for paths only when the course, unit, or destination is genuinely ambiguous; otherwise infer stable names from the user request and existing files.
+
+### Course and unit folder layout
+
+Organize course material with the same hierarchy under `resources/` and `notes/`:
+
+```text
+resources/<COURSE>/<unit>/
+notes/<COURSE>/<unit>/
+  <unit>.md
+  <unit>-reference.md
+  <unit>-qa.md
+```
+
+For example, `resources/CS168/proj01/` is mirrored by `notes/CS168/proj01/`, and its notes are `proj01.md`, `proj01-reference.md`, and `proj01-qa.md`.
+
+- Create missing course/unit directories at the start of a sustained lesson.
+- Put source material in the matching `resources/` directory and all lesson artifacts in the matching `notes/` directory. If existing material is clearly associated with that course/unit but is stored one level too high, organize it into the mirrored hierarchy; ask before moving anything only when the destination is ambiguous.
+- Create `<unit>.md` early as the full conversation log. If the `md-log` extension is available, explicitly tell the learner to run `/md-log notes/<COURSE>/<unit>/<unit>.md`; the file must exist first, and the command backfills the active session and mirrors future messages.
+- Treat the full log as chronological and the reference/Q&A notes as curated durable state.
+
+### Living reference document
+
+Maintain `<unit>-reference.md` as the compact conceptual source of truth.
+
+- Create it early in the lesson and update it after each completed concept node.
+- Record established definitions, unconditional truths, dependency edges, algorithms, diagrams, examples, caveats, and concise terminology.
+- Organize by concept rather than conversation chronology.
+- Keep it genuinely concise: it is an edited reference, not an append-only summary. On each update, rewrite or merge existing sections, consolidate related facts and code/type tables, and remove duplication or superseded formulations. Preserve the smallest accurate version that remains useful.
+- Keep detailed mistake diagnoses and repeated retrieval angles in the Q&A note rather than bloating the reference.
+- Keep examples analogous to pending assigned problems; do not turn it into an answer key before the learner attempts those problems.
+- Correct earlier inaccuracies explicitly instead of preserving them for transcript fidelity.
+- Link back to the full lesson log and folded Q&A note.
+
+### Folded Q&A and retrieval document
+
+Maintain `<lesson>-qa.md` as a retrieval-practice bank. Add an entry whenever:
+
+- the learner asks a substantive question about the lesson;
+- the learner answers a quiz incorrectly;
+- the learner chooses `I don't know`; or
+- the learner's numerical answer is right but its reasoning exposes a misconception.
+
+Keep the prompt visible and the answer folded by default using Obsidian-compatible HTML:
+
+```markdown
+## Q: Why ...?
+
+<details>
+<summary>Show answer</summary>
+
+Answer from foundations, including why the tempting misconception fails.
+
+</details>
+```
+
+For a missed question, hide the full diagnosis inside the fold and include the learner's mistaken model when useful. Phrase each entry so it can be attempted without surrounding transcript context. Merge duplicates rather than creating repeated cards. Do not add the solution to an assigned problem until the learner has attempted it; after completion, it may be represented as a generalized transfer question.
+
+These notes are durable learning state, not optional summaries. Update the files with tools during the lesson rather than merely promising to do so or relying on chat/session persistence.
+
 ## Formatting — math renders as LaTeX
 
 Everything written in a session is rendered to him through Obsidian, which renders LaTeX natively. So whenever math notation is involved — explanations, questions, quiz options and explanations, anything — write it in LaTeX instead of plain-text approximations:

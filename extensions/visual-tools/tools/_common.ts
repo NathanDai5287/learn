@@ -10,12 +10,12 @@
 
 import { spawn } from "node:child_process"
 import { tmpdir } from "node:os"
-import { basename, dirname, join } from "node:path"
+import { basename, delimiter, dirname, join } from "node:path"
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
 
-// rsvg-convert lives under MacPorts (/opt/local/bin); magick/gs under
-// /usr/local/bin; Homebrew under /opt/homebrew/bin. Augment PATH so the child
-// pi process (which may have inherited a thin PATH) still resolves them.
+// Common non-Windows locations for optional renderers. Windows installations
+// are normally already on PATH; use node:path's platform-specific delimiter
+// below so augmenting PATH does not break executable lookup there.
 export const EXTRA_PATH = ["/opt/local/bin", "/usr/local/bin", "/opt/homebrew/bin"]
 
 // Transient session/preview files live under the OS temp dir (NOT the vault),
@@ -23,10 +23,26 @@ export const EXTRA_PATH = ["/opt/local/bin", "/usr/local/bin", "/opt/homebrew/bi
 export const STAGING_ROOT = join(tmpdir(), "pi-visual-tools")
 export const FILES_DIRNAME = "viz"
 
+function envPath(name: string, ...parts: string[]): string | undefined {
+  const base = process.env[name]
+  return base ? join(base, ...parts) : undefined
+}
+
 export const CHROME_CANDIDATES = [
+  process.env.PUPPETEER_EXECUTABLE_PATH,
+  process.env.CHROME_PATH,
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
   "/Applications/Chromium.app/Contents/MacOS/Chromium",
-]
+  "/usr/bin/google-chrome",
+  "/usr/bin/google-chrome-stable",
+  "/usr/bin/chromium",
+  "/usr/bin/chromium-browser",
+  envPath("PROGRAMFILES", "Google", "Chrome", "Application", "chrome.exe"),
+  envPath("PROGRAMFILES(X86)", "Google", "Chrome", "Application", "chrome.exe"),
+  envPath("LOCALAPPDATA", "Google", "Chrome", "Application", "chrome.exe"),
+  envPath("PROGRAMFILES", "Microsoft", "Edge", "Application", "msedge.exe"),
+  envPath("PROGRAMFILES(X86)", "Microsoft", "Edge", "Application", "msedge.exe"),
+].filter((candidate): candidate is string => Boolean(candidate))
 
 export function findChrome(): string | undefined {
   for (const c of CHROME_CANDIDATES) if (existsSync(c)) return c
@@ -46,7 +62,7 @@ export function run(
   opts: { cwd: string; timeoutMs: number; env?: Record<string, string> },
 ): Promise<RunResult> {
   return new Promise((resolveRun) => {
-    const augmentedPath = [...EXTRA_PATH, process.env.PATH ?? ""].join(":")
+    const augmentedPath = [...EXTRA_PATH, process.env.PATH ?? ""].join(delimiter)
     const child = spawn(cmd, args, {
       cwd: opts.cwd,
       env: { ...process.env, ...(opts.env ?? {}), PATH: augmentedPath },
@@ -56,7 +72,7 @@ export function run(
     let timedOut = false
     const timer = setTimeout(() => {
       timedOut = true
-      child.kill("SIGKILL")
+      child.kill(process.platform === "win32" ? undefined : "SIGKILL")
     }, opts.timeoutMs)
     child.stdout.on("data", (d) => (stdout += d.toString()))
     child.stderr.on("data", (d) => (stderr += d.toString()))
