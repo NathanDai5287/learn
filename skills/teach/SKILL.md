@@ -164,11 +164,16 @@ For example, `resources/CS168/proj01/` is mirrored by `notes/CS168/proj01/`, and
 Maintain `<unit>-reference.md` as the compact conceptual source of truth.
 
 - Create it early in the lesson and update it after each completed concept node.
-- Record established definitions, unconditional truths, dependency edges, algorithms, diagrams, examples, caveats, and concise terminology.
-- Organize by concept rather than conversation chronology.
-- Keep it genuinely concise: it is an edited reference, not an append-only summary. On each update, rewrite or merge existing sections, consolidate related facts and code/type tables, and remove duplication or superseded formulations. Preserve the smallest accurate version that remains useful.
+- Record every piece of established, reusable knowledge needed to solve the unit's target problems: definitions, unconditional truths, dependency edges, algorithms, API signatures and parameter meanings, diagrams, examples, caveats, and concise terminology. **State, not path** means omitting the pedagogy—not omitting necessary knowledge. When a completed node introduces a distinction or operation required by the source problems, add it to the reference immediately.
+- Treat it as a **glanceable, self-contained cheat sheet of final, reusable knowledge**, not a record of the learning process. Think **state, not path**: the reference stores the current end-state of the knowledge; the full log stores the route taken to reach it; Q&A stores questions, misconceptions, and retrieval history. It should contain the general information and procedures needed to solve the unit's target problems without becoming an answer key.
+- Organize by the subject's logical structure rather than conversation chronology. Group facts where a learner would look for them: concept/model → operations or API → tracing/solution procedure → nearby pitfalls.
+- For a non-trivial note, put a compact navigation table or linked contents map near the top so skimming immediately reveals where each kind of information lives.
+- Optimize for lookup speed: use short descriptive headings, compact tables, equations, decision rules, code skeletons, and diagrams only when they replace prose. Keep a procedure beside the concepts it applies to, and collect only genuinely cross-cutting high-frequency traps in a final checklist.
+- Never include learner progress, quiz outcomes, misconception history, planning/checkpoint status, incomplete-section placeholders, or narration such as “established,” “in progress,” “to be expanded,” “awaiting approval,” or “the learner confirmed.” Put session chronology in the full log and diagnoses/retrieval history in Q&A.
+- Keep it genuinely concise: it is an edited reference, not an append-only summary. On each update, rewrite or merge existing sections, consolidate related facts and code/type tables, and remove duplication, superseded formulations, and process notes. Preserve the smallest accurate version that remains sufficient for quick problem solving.
+- Include live-session output only when the distilled result is generally reusable; do not preserve the story of how it was obtained.
 - Keep detailed mistake diagnoses and repeated retrieval angles in the Q&A note rather than bloating the reference.
-- Keep examples analogous to pending assigned problems; do not turn it into an answer key before the learner attempts those problems.
+- Keep examples analogous to pending assigned problems; provide all needed general tools but do not reveal an assigned problem's solution before the learner attempts it.
 - Correct earlier inaccuracies explicitly instead of preserving them for transcript fidelity.
 - Link back to the full lesson log and folded Q&A note.
 
